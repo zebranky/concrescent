@@ -5,6 +5,7 @@ require_once dirname(__FILE__).'/../lib/dal/questions.php';
 require_once dirname(__FILE__).'/../lib/ui/questions.php';
 require_once dirname(__FILE__).'/../lib/dal/mail.php';
 require_once dirname(__FILE__).'/../lib/ui/mail.php';
+require_once dirname(__FILE__).'/../lib/slack.php';
 
 $conn = get_db_connection();
 db_require_table('staffer_badges', $conn);
@@ -35,15 +36,18 @@ if (isset($_POST['action'])) {
 				mysql_query($q, $conn);
 				
 				$email_template = null;
+				$results = mysql_query('SELECT * FROM '.db_table_name('staffers').' WHERE `id` = '.$id, $conn);
+				$result = mysql_fetch_assoc($results);
+				$result = decode_staffer($result, $badge_names);
 				switch ($application_status) {
-					case 'Accepted': $email_template = get_mail_template('staff_accepted', $conn); break;
+					case 'Accepted':
+						$email_template = get_mail_template('staff_accepted', $conn);
+						app_approved_hook($id, $result['first_name'], $result['last_name'], $result['fandom_name'], $admin_user['username'], $assigned_position);
+						break;
 					case 'Maybe': $email_template = get_mail_template('staff_maybe', $conn); break;
 					case 'Rejected': $email_template = get_mail_template('staff_rejected', $conn); break;
 				}
 				if ($email_template && trim($email_template['body'])) {
-					$results = mysql_query('SELECT * FROM '.db_table_name('staffers').' WHERE `id` = '.$id, $conn);
-					$result = mysql_fetch_assoc($results);
-					$result = decode_staffer($result, $badge_names);
 					mail_send($result['email_address'], $email_template, $result);
 				}
 				

@@ -95,3 +95,13 @@ $badge_printing_external_stylesheet = '';
 
 /* Location of the theme directory. */
 $theme_base = 'themes/luna';
+
+/*=====================*/
+/* Slack Configuration */
+/*=====================*/
+
+/* Domain for notification links */
+$slack_notification_domain = '';
+
+/* Staff notification hook URL */
+$slack_staff_hook_url = '';

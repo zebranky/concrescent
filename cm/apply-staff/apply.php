@@ -144,7 +144,7 @@ if (isset($_POST['action'])) {
 				mysql_query($q, $conn);
 				$staffer_id = (int)mysql_insert_id($conn);
 				set_extension_answers('staffer', $staffer_id, $extension_answers, $conn);
-				staff_application_hook($staffer_id, $first_name, $last_name, $fandom_name);
+				app_submitted_hook($staffer_id, $first_name, $last_name, $fandom_name);
 				
 				$email_template = get_mail_template('staff_submitted', $conn);
 				if ($email_template && trim($email_template['body'])) {
