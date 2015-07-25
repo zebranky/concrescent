@@ -220,6 +220,8 @@ echo '<div class="card">';
 				}
 		echo '</div>';
 		echo '<div class="card-buttons">';
+			echo '<p><b>NOTE: Clicking "Update Status" will immediately send an email to the applicant if a <a href="/admin/staffer_email.php">form letter</a> is configured for the new status.</b></p>';
+			echo '<p>Use "<a href="/admin/staffers.php">Edit Staff Applications</a>" to change an application\'s status silently.</p><br/>';
 			echo '<input type="hidden" name="action" value="save">';
 			echo '<input type="hidden" name="id" value="'.$id.'">';
 			echo '<input type="submit" name="submit" value="Update Status">';
