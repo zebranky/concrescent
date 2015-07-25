@@ -291,7 +291,11 @@ if (isset($_POST['action'])) {
 				echo '<div class="card">';
 					echo '<div class="card-title">Application Submitted</div>';
 					echo '<div class="card-content">';
+					if (isset($descriptions['Table App Success'])) {
+						echo '<p>' . safe_html_string($descriptions['Table App Success']) . '</p>';
+					} else {
 						echo '<p>Your table application has been submitted.</p>';
+					}
 					echo '</div>';
 				echo '</div>';
 				render_application_tail();
