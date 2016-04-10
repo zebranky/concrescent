@@ -116,8 +116,8 @@ if ($action == 'list_holders') {
 	} else {
 		$ps = null;
 	}
-	$holders = list_badge_holders($t, $badge_id, $as, $ps, null, null, $conn);
-	if ($holders) {
+	List($holders, $totalHolders) = list_badge_holders($t, $badge_id, $as, $ps, null, null, $conn);
+    if ($holders) {
 		foreach ($holders as $h) {
 			echo '<tr>';
 			echo '<td><a href="#" onclick="list_artwork(\'';
@@ -132,7 +132,7 @@ if ($action == 'list_holders') {
 			echo '<td>'.(isset($h['application_status_html']) ? $h['application_status_html'] : '').'</td>';
 			echo '<td>'.(
 				isset($h['payment_status_html']) ? $h['payment_status_html'] :
-				(isset($h['contract_status_html']) ? $h['contract_status_html'] : '')
+				(isset($h['payment_status_html']) ? $h['payment_status_html'] : '')
 			).'</td>';
 			echo '</tr>';
 		}

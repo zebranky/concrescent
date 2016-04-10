@@ -44,9 +44,9 @@ function render_list_search($what, $class = '', $style = '') {
 	echo '</div>';
 }
 
-function render_list_table($columns, $render, $add, $connection, $actions = true) {
+function render_list_table($columns, $render, $add, $connection, $actions = true, $id = "") {
 	// Deciding behavior based on (is_array($)) and ($ === true); this is such a PHP function. ;)
-	echo '<table border="0" cellpadding="0" cellspacing="0" class="entity-list">';
+	echo '<table border="0" cellpadding="0" cellspacing="0" class="entity-list" ' . ($id == "" ? '' : 'id="' . $id . '" ') . '>';
 		echo '<thead>';
 			echo '<tr>';
 				foreach ($columns as $column) {

@@ -171,7 +171,7 @@ if (isset($_POST['action'])) {
 				'guest_description' => $guest_description,
 				'num_supporters' => $num_supporters,
 				'application_status' => 'Submitted',
-				'contract_status' => 'Incomplete',
+				'payment_status' => 'Incomplete',
 			);
 			$extension_answers = get_posted_extension_answers($extension_questions, $errors);
 			$guest_supporters = array();

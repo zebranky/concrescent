@@ -27,7 +27,7 @@ if (isset($_POST['action'])) {
 				mysql_query($q, $conn);
 			} else {
 				$q = 'INSERT INTO '.db_table_name('guests').' SET '.$set.', `date_created` = NOW()';
-				mysql_query($q, $conn);
+                mysql_query($q, $conn);
 				$id = (int)mysql_insert_id($conn);
 			}
 			$extension_answers = get_posted_extension_answers($extension_questions);
@@ -213,22 +213,22 @@ echo '<div class="card">';
 						echo '</select></td>';
 					echo '</tr>';
 					echo '<tr>';
-						echo '<th><label for="contract_status">Contract Status:</label></th>';
-						echo '<td><select name="contract_status">';
+						echo '<th><label for="payment_status">Contract Status:</label></th>';
+						echo '<td><select name="payment_status">';
 							echo '<option value="Incomplete"';
-								if ($result && $result['contract_status'] == 'Incomplete') echo ' selected="selected"';
+								if ($result && $result['payment_status'] == 'Incomplete') echo ' selected="selected"';
 								echo '>Incomplete</option>';
 							echo '<option value="Cancelled"';
-								if ($result && $result['contract_status'] == 'Cancelled') echo ' selected="selected"';
+								if ($result && $result['payment_status'] == 'Cancelled') echo ' selected="selected"';
 								echo '>Cancelled by Applicant</option>';
 							echo '<option value="Completed"';
-								if ($result && $result['contract_status'] == 'Completed') echo ' selected="selected"';
+								if ($result && $result['payment_status'] == 'Completed') echo ' selected="selected"';
 								echo '>Completed</option>';
 							echo '<option value="Refunded"';
-								if ($result && $result['contract_status'] == 'Refunded') echo ' selected="selected"';
+								if ($result && $result['payment_status'] == 'Refunded') echo ' selected="selected"';
 								echo '>Refunded</option>';
 							echo '<option value="Pulled"';
-								if ($result && $result['contract_status'] == 'Pulled') echo ' selected="selected"';
+								if ($result && $result['payment_status'] == 'Pulled') echo ' selected="selected"';
 								echo '>Badge Pulled</option>';
 						echo '</select></td>';
 					echo '</tr>';

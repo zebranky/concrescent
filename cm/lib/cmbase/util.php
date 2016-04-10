@@ -43,20 +43,20 @@ function application_status_html($application_status) {
 	     . '</span>';
 }
 
-function contract_status_string($contract_status) {
-	switch ($contract_status) {
+function payment_status_stringg($payment_status) {
+	switch ($payment_status) {
 		case 'Incomplete': return 'Incomplete'; break;
 		case 'Cancelled': return 'Cancelled by Applicant'; break;
 		case 'Completed': return 'Completed'; break;
 		case 'Refunded': return 'Refunded'; break;
 		case 'Pulled': return 'Badge Pulled'; break;
-		default: return $contract_status; break;
+		default: return $payment_status; break;
 	}
 }
 
-function contract_status_html($contract_status) {
+function payment_status_htmlg($payment_status) {
 	return '<span class="contract-status contract-status-'
-	     . htmlspecialchars(strtolower($contract_status)).'">'
-	     . htmlspecialchars(contract_status_string($contract_status))
+	     . htmlspecialchars(strtolower($payment_status)).'">'
+	     . htmlspecialchars(payment_status_string($payment_status))
 	     . '</span>';
 }

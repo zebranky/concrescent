@@ -27,7 +27,7 @@ db_schema(array(
 		'`guest_description` TEXT NOT NULL,'.
 		'`num_supporters` INTEGER NOT NULL,'.
 		'`application_status` ENUM(\'Submitted\',\'Accepted\',\'Maybe\',\'Rejected\',\'Cancelled\',\'Pulled\') NOT NULL,'.
-		'`contract_status` ENUM(\'Incomplete\',\'Cancelled\',\'Completed\',\'Refunded\',\'Pulled\') NOT NULL,'.
+		'`payment_status` ENUM(\'Incomplete\',\'Cancelled\',\'Completed\',\'Refunded\',\'Pulled\') NOT NULL,'.
 		'`date_created` DATETIME NOT NULL,'.
 		'`date_modified` DATETIME NOT NULL'
 	),
