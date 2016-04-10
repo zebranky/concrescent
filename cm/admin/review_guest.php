@@ -29,7 +29,7 @@ if (isset($_POST['action'])) {
 					'replaced_by' => (($application_status == 'Cancelled') ? (int)$_POST['replaced_by'] : 0),
 					'badge_id' => (int)$_POST['badge_id'],
 					'application_status' => $application_status,
-					'contract_status' => $_POST['contract_status'],
+					'payment_status' => $_POST['payment_status'],
 				));
 				$q = 'UPDATE '.db_table_name('guests').' SET '.$set.' WHERE `id` = '.$id;
 				mysql_query($q, $conn);
@@ -193,32 +193,32 @@ echo '<div class="card">';
 			echo '<h2>Contract Status</h2>';
 				echo '<p>';
 					echo '<label>';
-						echo '<input type="radio" name="contract_status" value="Incomplete"';
-						if ($result['contract_status'] == 'Incomplete') echo ' checked="checked"';
+						echo '<input type="radio" name="payment_status" value="Incomplete"';
+						if ($result['payment_status'] == 'Incomplete') echo ' checked="checked"';
 						echo '>Incomplete';
 					echo '</label>';
 					echo '<br>';
 					echo '<label>';
-						echo '<input type="radio" name="contract_status" value="Cancelled"';
-						if ($result['contract_status'] == 'Cancelled') echo ' checked="checked"';
+						echo '<input type="radio" name="payment_status" value="Cancelled"';
+						if ($result['payment_status'] == 'Cancelled') echo ' checked="checked"';
 						echo '>Cancelled by Applicant';
 					echo '</label>';
 					echo '<br>';
 					echo '<label>';
-						echo '<input type="radio" name="contract_status" value="Completed"';
-						if ($result['contract_status'] == 'Completed') echo ' checked="checked"';
+						echo '<input type="radio" name="payment_status" value="Completed"';
+						if ($result['payment_status'] == 'Completed') echo ' checked="checked"';
 						echo '>Completed';
 					echo '</label>';
 					echo '<br>';
 					echo '<label>';
-						echo '<input type="radio" name="contract_status" value="Refunded"';
-						if ($result['contract_status'] == 'Refunded') echo ' checked="checked"';
+						echo '<input type="radio" name="payment_status" value="Refunded"';
+						if ($result['payment_status'] == 'Refunded') echo ' checked="checked"';
 						echo '>Refunded';
 					echo '</label>';
 					echo '<br>';
 					echo '<label>';
-						echo '<input type="radio" name="contract_status" value="Pulled"';
-						if ($result['contract_status'] == 'Pulled') echo ' checked="checked"';
+						echo '<input type="radio" name="payment_status" value="Pulled"';
+						if ($result['payment_status'] == 'Pulled') echo ' checked="checked"';
 						echo '>Badge Pulled';
 					echo '</label>';
 				echo '</p>';

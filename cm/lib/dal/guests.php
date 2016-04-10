@@ -65,9 +65,9 @@ function decode_guest($result, $badge_names) {
 	$application_status = $result['application_status'];
 	$application_status_string = application_status_string($application_status);
 	$application_status_html = application_status_html($application_status);
-	$contract_status = $result['contract_status'];
-	$contract_status_string = contract_status_string($contract_status);
-	$contract_status_html = contract_status_html($contract_status);
+	$payment_status = $result['payment_status'];
+	$payment_status_string = payment_status_string($payment_status);
+	$payment_status_html = payment_status_html($payment_status);
 	$search_content = strtolower(implode('||', array(
 		$id,
 		$contact_real_name,
@@ -77,7 +77,7 @@ function decode_guest($result, $badge_names) {
 		$guest_name,
 		$guest_description,
 		$application_status_string,
-		$contract_status_string,
+		$payment_status_string,
 	)));
 	$date_created = $result['date_created'];
 	$date_modified = $result['date_modified'];
@@ -99,9 +99,9 @@ function decode_guest($result, $badge_names) {
 		'application_status' => $application_status,
 		'application_status_string' => $application_status_string,
 		'application_status_html' => $application_status_html,
-		'contract_status' => $contract_status,
-		'contract_status_string' => $contract_status_string,
-		'contract_status_html' => $contract_status_html,
+		'payment_status' => $payment_status,
+		'payment_status_string' => $payment_status_string,
+		'payment_status_html' => $payment_status_html,
 		'search_content' => $search_content,
 		'date_created' => $date_created,
 		'date_modified' => $date_modified,
@@ -120,7 +120,7 @@ function encode_guest($result) {
 	if (isset($result['guest_description'    ])) $set[] = '`guest_description` = '     . q_string        ($result['guest_description'    ]);
 	if (isset($result['num_supporters'       ])) $set[] = '`num_supporters` = '        . q_int           ($result['num_supporters'       ]);
 	if (isset($result['application_status'   ])) $set[] = '`application_status` = '    . q_string        ($result['application_status'   ]);
-	if (isset($result['contract_status'      ])) $set[] = '`contract_status` = '       . q_string        ($result['contract_status'      ]);
+	if (isset($result['payment_status'      ])) $set[] = '`payment_status` = '       . q_string        ($result['payment_status'      ]);
 	$set[] = '`date_modified` = NOW()';
 	return implode(', ', $set);
 }
@@ -209,9 +209,9 @@ function decode_guest_supporter($result, $guest_info) {
 	$application_status = $guest_info['application_status'];
 	$application_status_string = $guest_info['application_status_string'];
 	$application_status_html = $guest_info['application_status_html'];
-	$contract_status = $guest_info['contract_status'];
-	$contract_status_string = $guest_info['contract_status_string'];
-	$contract_status_html = $guest_info['contract_status_html'];
+	$payment_status = $guest_info['payment_status'];
+	$payment_status_string = $guest_info['payment_status_string'];
+	$payment_status_html = $guest_info['payment_status_html'];
 	$print_count = (int)$result['print_count'];
 	$print_time = $result['print_time'];
 	$checkin_count = (int)$result['checkin_count'];
@@ -262,9 +262,9 @@ function decode_guest_supporter($result, $guest_info) {
 		'application_status' => $application_status,
 		'application_status_string' => $application_status_string,
 		'application_status_html' => $application_status_html,
-		'contract_status' => $contract_status,
-		'contract_status_string' => $contract_status_string,
-		'contract_status_html' => $contract_status_html,
+		'payment_status' => $payment_status,
+		'payment_status_string' => $payment_status_string,
+		'payment_status_html' => $payment_status_html,
 		'print_count' => $print_count,
 		'print_time' => $print_time,
 		'checkin_count' => $checkin_count,
@@ -343,9 +343,9 @@ function get_guest_info($connection, $badge_names) {
 		$application_status = $result['application_status'];
 		$application_status_string = application_status_string($application_status);
 		$application_status_html = application_status_html($application_status);
-		$contract_status = $result['contract_status'];
-		$contract_status_string = contract_status_string($contract_status);
-		$contract_status_html = contract_status_html($contract_status);
+		$payment_status = $result['payment_status'];
+		$payment_status_string = payment_status_stringg($payment_status);
+		$payment_status_html = payment_status_htmlg($payment_status);
 		$guest_info[$id] = array(
 			'id' => $id,
 			'id_string' => $id_string,
@@ -357,9 +357,9 @@ function get_guest_info($connection, $badge_names) {
 			'application_status' => $application_status,
 			'application_status_string' => $application_status_string,
 			'application_status_html' => $application_status_html,
-			'contract_status' => $contract_status,
-			'contract_status_string' => $contract_status_string,
-			'contract_status_html' => $contract_status_html,
+			'payment_status' => $payment_status,
+			'payment_status_string' => $payment_status_string,
+			'payment_status_html' => $payment_status_html,
 		);
 	}
 	return $guest_info;

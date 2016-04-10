@@ -93,12 +93,17 @@ $(document).ready(function() {
 	};
 	var pullBadgeTypes = function() {
 		checked_badge_types = [];
+        $('.badge-type-check input:checked').each(function(){
+            checked_badge_types.push($(this).attr('name').replace(/^badge-type-/, ''));
+        })
+        /* For some reason this wasn't working properly in Chrome.
 		$('.badge-type-check').each(function() {
 			var cb = $(this).find('input');
 			var id = cb.attr('id').replace(/^badge-type-/, '');
 			var checked = !!cb.attr('checked');
 			if (checked) checked_badge_types.push(id);
 		});
+		*/
 		return checked_badge_types;
 	};
 	

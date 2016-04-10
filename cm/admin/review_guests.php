@@ -38,7 +38,7 @@ if (isset($_POST['start_id'])) {
 				$result['num_supporters'],
 			), extension_answer_values_in_list($extension_questions, $extension_answers), array(
 				array('html' => application_status_html($result['application_status'])),
-				array('html' => contract_status_html($result['contract_status'])),
+				array('html' => payment_status_html($result['payment_status'])),
 			)),
 			null,
 			/*  selectable = */ false,

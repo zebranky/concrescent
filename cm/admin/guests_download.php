@@ -64,7 +64,7 @@ if (isset($_POST['download'])) {
 					$result['num_supporters'],
 				), extension_answer_values($extension_questions, $extension_answers), array(
 					$result['application_status_string'],
-					$result['contract_status_string'],
+					$result['payment_status_string'],
 					$result['date_created'],
 					$result['date_modified'],
 				));
@@ -163,7 +163,7 @@ if (isset($_POST['download'])) {
 					$result['ice_email_address'],
 					$result['ice_phone_number'],
 					$result['application_status_string'],
-					$result['contract_status_string'],
+					$result['payment_status_string'],
 					$result['print_count'],
 					$result['print_time'],
 					$result['checkin_count'],

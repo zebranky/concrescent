@@ -312,10 +312,163 @@ function get_all_badge_artwork($connection) {
 	return $artwork;
 }
 
-function list_badge_holders($t, $badge_id_string, $application_status, $payment_status, $attendee_start_id, $attendee_batch_size, $connection) {
+function list_badge_holders($t, $badge_id_string, $application_status, $payment_status, $start_id, $batch_size, $connection, $searchString = null) {
 	// "If you have a procedure with ten parameters, you probably missed some."
 	// This is very ugly and could benefit from refactoring of the individual DALs.
+    //Tsaukpaetra: Challenge Accepted!
 	$badge_holders = array();
+    $totalRows = 0;
+
+    //Lets declare a small badge-type map
+    $badgedata = array(
+        's' => array(
+            'requiredtables' => array('staffers','staffer_badges'),
+            'table' => 'staffers',
+            'badgenamefunc' => 'get_staffer_badge_names',
+            'infofunc' => null,
+            'decodefunc' => 'decode_staffer',
+            'searchcolumns' => array('')
+        ),
+        'g' => array(
+            'requiredtables' => array('guest_supporters','guests','guest_badges'),
+            'table' => 'guest_supporters',
+            'badgenamefunc' => 'get_guest_badge_names',
+            'infofunc' => 'get_guest_info',
+            'decodefunc' => 'decode_guest_supporter',
+            'searchcolumns' => array()
+        ),
+        'e' => array(
+            'requiredtables' => array('eventlet_staffers','eventlets','eventlet_badges'),
+            'table' => 'eventlet_staffers',
+            'badgenamefunc' => 'get_eventlet_badge_names',
+            'infofunc' => 'get_eventlet_info',
+            'decodefunc' => 'decode_eventlet_staffer',
+            'searchcolumns' => array()
+        ),
+        'b' => array(
+            'requiredtables' => array('booth_staffers','booths','booth_badges'),
+            'table' => 'booth_staffers',
+            'badgenamefunc' => 'get_booth_badge_names',
+            'infofunc' => 'get_booth_info',
+            'decodefunc' => 'decode_booth_staffer',
+            'searchcolumns' => array()
+        ),
+        'a' => array(
+            'requiredtables' => array('attendees','attendee_badges'),
+            'table' => 'attendees',
+            'badgenamefunc' => 'get_attendee_badge_names',
+            'infofunc' => null,
+            'decodefunc' => 'decode_attendee',
+            'searchcolumns' => array(
+                'first_name',
+                'last_name',
+                'fandom_name',
+                'email_address',
+                'phone_number',
+                'ice_name',
+                'ice_email_address',
+                'ice_phone_number',
+                'payment_lookup_key'
+            )
+        ),
+    );
+
+    //Good, now lets do a little processing!
+
+    //Check that type is not null/false
+    if(!$t)
+    {
+        //Loop through all the known types
+        foreach($badgedata as $t2 => $value)
+        {
+            List($bhadd, $totadd) = list_badge_holders($t2, $badge_id_string, $application_status, $payment_status, $start_id, $batch_size, $connection, $searchString);
+            $badge_holders = array_merge((array)$bhadd,$badge_holders);
+            $totalRows += $totadd;
+        }
+        return $badge_holders;
+    }
+
+    //Quickfail: Was a valid badge type given?
+    if(!isset($badgedata[$t]))
+        return null;
+
+    //Normal processing. Lets get the badge info we need
+    $binfo = $badgedata[$t];
+
+    //First, require the tables
+    foreach($binfo['requiredtables'] as $tablename )
+        db_require_table($tablename, $connection);
+
+    //Next, get the badge names
+    $badge_names = call_user_func($binfo['badgenamefunc'], $connection);
+
+    //If we have an infofunc, replace the $badge_names with that info
+    if($binfo['infofunc'])
+        $badge_names = call_user_func($binfo['infofunc'],$connection, $badge_names);
+
+    //Start building our queries (one for the total count if limited, and the normal one)
+    $qry = 'SELECT * FROM '.db_table_name($binfo['table']).' ';
+    $qrycount = 'SELECT COUNT(*) as Total FROM '.db_table_name($binfo['table']) .' ';
+
+    //Build up the Where clause
+    $where = array();
+    //Add Badge_ID if set
+    if($badge_id_string)
+        $where[] = 'badge_id = ' . preg_replace("/[^0-9,.]/", "", $badge_id_string);
+    //Add Application Status if set
+    if($application_status)
+        $where[] = 'application_status = \'' . mysql_real_escape_string($application_status) . '\'';
+    //Add payment_status if set
+    if($payment_status)
+        $where[] = 'payment_status = \'' . mysql_real_escape_string($application_status) . '\'';
+
+
+    //Add searchable columns if we're searching
+    if (isset($searchString))
+    {
+        $s = '(';
+        foreach($binfo["searchcolumns"] as $idx => $searchcol)
+        {
+            if($idx>0)
+                $s .= 'or ';
+            $s .= $searchcol . ' like \'%' . mysql_real_escape_string($searchString) . '%\' ';
+        }
+        $where[] = $s . ')';
+
+    }
+
+    //Now compile the Where clause
+    $whereclause = count($where) == 0 ? ' ' : 'WHERE 1=1 AND ' . implode(' AND ',$where) . ' ' ;
+
+    //Add the Order By clause
+    //TODO: Allow this to be dynamic somehow?
+    $orderclause = 'ORDER BY `id` ASC ';
+
+    //Add Limits if asked for
+    $limits = ($batch_size ? ' LIMIT '.$batch_size .' ': ' ')
+        . ($start_id ? ' OFFSET '.($start_id - 1) . ' ' : ' ');
+
+    //Finalize the queries
+    $qry .= $whereclause . $orderclause . $limits;
+    $qrycount .= $whereclause;
+
+    //Execute the queries
+    $results = mysql_query($qry, $connection);
+
+    //Add the results together
+    while ($result = mysql_fetch_assoc($results)) {
+        $result = call_user_func($binfo['decodefunc'],$result, $badge_names);
+        if (!$badge_id_string || $result['badge_id_string'] == $badge_id_string) {
+                    $result['t'] = $t;
+                    $badge_holders[] = $result;
+        }
+    }
+
+    //Retrieve the count if asked for
+    $totalRows = strlen($limits) > 3 ? mysql_fetch_assoc(mysql_query($qrycount, $connection))['Total'] : '-1';
+
+
+/* Legacy code
 	if (!$t || $t == 's') {
 		db_require_table('staffers', $connection);
 		db_require_table('staffer_badges', $connection);
@@ -344,7 +497,7 @@ function list_badge_holders($t, $badge_id_string, $application_status, $payment_
 			$result = decode_guest_supporter($result, $guest_info);
 			if (!$badge_id_string || $result['badge_id_string'] == $badge_id_string) {
 				if (!$application_status || $result['application_status'] == $application_status) {
-					if (!$payment_status || $result['contract_status'] == $payment_status) {
+					if (!$payment_status || $result['payment_status'] == $payment_status) {
 						$result['t'] = 'g';
 						$badge_holders[] = $result;
 					}
@@ -395,9 +548,9 @@ function list_badge_holders($t, $badge_id_string, $application_status, $payment_
 		db_require_table('attendee_badges', $connection);
 		$badge_names = get_attendee_badge_names($connection);
 		$q = 'SELECT * FROM '.db_table_name('attendees');
-		if ($attendee_start_id) $q .= ' WHERE `id` >= '.(int)$attendee_start_id;
+		if ($start_id) $q .= ' WHERE `id` >= '.(int)$start_id;
 		$q .= ' ORDER BY `id`';
-		if ($attendee_batch_size) $q .= ' LIMIT '.(int)$attendee_batch_size;
+		if ($batch_size) $q .= ' LIMIT '.(int)$batch_size;
 		$results = mysql_query($q, $connection);
 		while ($result = mysql_fetch_assoc($results)) {
 			$result = decode_attendee($result, $badge_names);
@@ -409,7 +562,8 @@ function list_badge_holders($t, $badge_id_string, $application_status, $payment_
 			}
 		}
 	}
-	return $badge_holders;
+*/
+	return array($badge_holders,$totalRows);
 }
 
 function get_badge_holder($t, $id, $connection) {

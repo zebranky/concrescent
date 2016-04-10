@@ -76,6 +76,11 @@ echo '<script type="text/javascript" src="' . htmlspecialchars(resource_file_url
 	},
 	addEditDialogGetSaveData: function(id, name) {
 		var permissions = [];
+        $('.edit-permissions:checked[name^="edit-permissions-"]').each(function(){
+            permissions.push($(this).attr('name').substring(17));
+        });
+        /*
+        //For some reason this wasn't working properly in Chrome.
 		$('.edit-permissions').each(function() {
 			if ($(this).attr('checked')) {
 				var name = $(this).attr('name');
@@ -84,6 +89,7 @@ echo '<script type="text/javascript" src="' . htmlspecialchars(resource_file_url
 				}
 			}
 		});
+        */
 		return {
 			'id': id,
 			'name': name,
